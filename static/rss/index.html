@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[For the love of blog]]></title><description><![CDATA[I'm going to try and write stuff here occasionally. Probably about programming. Sometimes it may even be intelligible...]]></description><link>http://my-ghost-blog.com/</link><generator>Ghost v0.4.2</generator><lastBuildDate>Tue, 22 Apr 2014 05:10:06 GMT</lastBuildDate><atom:link href="http://my-ghost-blog.com/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[And back to Ghost...]]></title><description><![CDATA[<p><img src='http://my-ghost-blog.com/content/images/2014/Apr/image.jpg'  alt="main-image" /></p>
+
+<p>Back in my first post I noted that I started this blog as part of trying out the <a href='https://ghost.org/' >Ghost Blogging Platform</a>, but almost immediately switched to Octopress as I preferred to have the blog be static and stored in a Git repo, and Ghost wasn't really customisable at the time.</p>
+
+<p>A few months have passed and things have changed. Ghost now support themes to allow for wider content, and there's a small project called <a href='https://github.com/axitkhurana/buster' >Buster</a> which uses Wget to make a static snapshot of your Ghost blog and push it to Github.  Now while the SQLite DB is not pushed to Github, and it doesn't do revision control, it means I do get a nice, local Ghost installation for writing in (thanks to <a href='https://github.com/dockerfile/ghost' >Docker</a>) which is much more pleasant than the cycle of write markdown, generate preview, notice errors, write more markdown, ad infinum. The Ghost DB and picture are kept in a folder outside of the Docker container that is backed up via Dropbox.</p>
+
+<p>So let's see how this goes over the next few months!</p>]]></description><link>http://my-ghost-blog.com/and-back-to-ghost/</link><guid isPermaLink="false">b14d8bb0-2261-4888-a642-1b859ef90ddc</guid><category><![CDATA[photos]]></category><dc:creator><![CDATA[Nick Read]]></dc:creator><pubDate>Tue, 22 Apr 2014 04:54:58 GMT</pubDate></item><item><title><![CDATA[Single Page Applications and AngularJS]]></title><description><![CDATA[<p>SPAs have come a long way over the last decade (I'm looking at you Outlook Web Access), and are almost unavoidable these days with many major websites being implemented as one. I always assumed writing a large SPA would be impossible due to complexity, cross-browser issues and the inability to easily do unit testing. Without actually attempting to do so, I presumed that the requried effort for writing everything client-side would be, say, twice as great as writing an AJAX heavy server-client application. Thankfully that assumption is turning out to be quite wrong, in fact, I'm slowly becoming of the opinion that SPAs are actually easier, for a couple of reasons:</p>
+
+<ol>
+<li><p>A big part of writing large, Ajax heavy web applications is ensuring all the necessary state is transferred back and forth to the server. Forget to post back one of the form elements and the server response is going to be incorrect. The product I work on also had a lot of contextal modification which exacerbates this issue; for example, a search page that worked as expected, except when used in another context at which point several other hidden fields had to be submitted for all AJAX calls to, which in turn could impact the search results being returned. In this case, you don't know what you needs to be submitted, so you just have to submit everything.  Thankfully we wrote a framework for generating the correct Javascript and for performing all AJAX calls, but it's still a big effort. This sort of problem can still exist in a SPA, but the context handling is done along on the browser side which should make things easier.</p></li>
+<li><p>It greatly simplies the server-side because all you need to worry about now is providing an API. Not only is this much more easily testable than a UI (see <a href='http://docs.seleniumhq.org/' >Selenium</a>), but your code can be optimised just for API delivery, possibly removing abstractions that were previously necessary for concurrently deliverying a UI. Who these days isn't already providing their consumers with a set of APIs? Writing your UI on top of your own, public APIs is a fantastic way of demonstrating how complete they are. If you decide to take an SPA to its ultimate conclusion where the browser state <em>is</em> the user session and your servers are entirely stateless, you will also see the benefits of code simplification and easy scaling out of your app servers.</p></li>
+<li><p>The JS libraries for helping deliver and SPA, MVC(ish) solution are all excellent. Are they perfect? No, not even close. Will they save you time, money and headaches? Absolutely, and they're probably the biggest reason as to why SPAs are more viable to implement than ever before.</p></li>
+</ol>
+
+<h3 id="angularjs">AngularJS</h3>
+
+<p>I've been playing around with <a href='http://angularjs.org/' >AngularJS</a> for about 12 months; first investigating it personally, then as part of my work. I haven't really looked at other libraries (like <a href='http://emberjs.com/' >Ember.js</a>) yet, but it does seem like AngularJS has all the momentum right now.</p>
+
+<p>Unfortunately, the learning curve is really high due to the poor documentation at the time I was learning. They've been doing great work to fix this, but it's still not there yet - I still need to go to StackOverflow for some answers, especially wondering what the 'best' way to do something is - the AngularJS doco still has a habit of layouting out all the different ways you could accomplish something which is not ideal in most cases that you're already frustrated trying to accomplish or fix something.</p>
+
+<p>I really love using the <a href='https://github.com/angular-ui/ui-router' >AngularUI Router</a> module as it provides much greater flexibility around nested views; however, it looks like I should be writing a lot more stuff as Directives instead. They seem a bit clunky sometimes, but they're clearly the best way to writing components that are reusable and individually testable. Once you've got a bunch of reusable directives, maybe the need for implementing the app as nested <code>ui-view</code>s goes away.  </p>
+
+<h3 id="problemswithangularjsorjavascript">Problems with AngularJS... or Javascript?</h3>
+
+<p>So I still have problems when I'm developing AngularJS apps - I feel like I'm in a constant cycle of refreshing, clearing the cache and checking the console. I come from a land of strongly typed language though with IDEs that point out issues immediately, so maybe it's just my skills getting weak at writing code correctly in the first place. I've lost count of the number of times I've missed a comma, or that I'm too scared to refactor with any sort of confidence (thanks again though Git), but these aren't AngularJS problems - they're Javascript problems (or my problems writing Javascript!). I feel the same way when I've tried writing any sort of reasonable sized Node.js project before too.</p>
+
+<p>I think the solution to this is <a href='http://my-ghost-blog.com/adart' >AngularDart</a>. I haven't had a need to use Dart yet, but it certainly looks like a great alternative. I'm most interested though that they haven't tried to simply "use AngularJS" but in Dart, which is how you use it with <a href='http://alxhill.com/blog/articles/angular-coffeescript/' >CoffeeScript</a>, but they're rewriting it as if it were a native Dart library.</p>
+
+<p>Something to keep my eye on anyway. </p>]]></description><link>http://my-ghost-blog.com/single-page-applications-and-angularjs/</link><guid isPermaLink="false">de4fd75d-87cb-4e7e-a998-4e22a5a76f1c</guid><dc:creator><![CDATA[Nick Read]]></dc:creator><pubDate>Tue, 07 Jan 2014 01:00:00 GMT</pubDate></item><item><title><![CDATA[Let's get reactive]]></title><description><![CDATA[<p>I've been taking the <a href='https://class.coursera.org/reactive-001/class/index' >Principles of Reactive Programming</a> course on Coursera recently. The course is delivered by three different lecturers covering different and/or complementing ways of building reactive programs. While I haven't quite finished the course yet, and the last assignment is crazy big (the brief pretty much says "build the equivalent of a clustered Riak with data persistence"... <em>gulp</em>), I have been enjoying it. It's good to be writing Scala again given that my day job is a huge Java application.</p>
+
+<h3 id="rx">Rx</h3>
+
+<p>The introduction to <a href='http://rxscala.github.io/' >Rx</a> was quite interesting, and after completing the assignments I can definitely see how it can help tame streams of events. I don't think it is something you would want to apply everywhere, but it certainly has its targets:</p>
+
+<ul>
+<li>Native application where you're receiving click events - this is also what the last assignment was built around and I think is a very natural fit.</li>
+<li>Web services that talk over WebSocket could be interesting too as it lets you work with the incoming "steam of things"; however, web containers are already providing mechanisms for working with this, so maybe it's less useful here than it could be.  </li>
+<li>Possibly integrating with Akka actors to convert incoming messages into a stream - I'm not sure how applicable this would really be though since you want Akka to be in charge of ensuring actors and their state are not being used concurrently, and having Rx step in an execute callbacks at the wrong time could be bad.</li>
+</ul>
+
+<p>I guess I'll need to investigate further before making a call on how applicable Rx is in real world scenarios.</p>
+
+<h3 id="akka">Akka</h3>
+
+<p>The topic I was more excited to delve into  was <a href='http://akka.io/' >Akka</a>. I've looked into it a couple of times before and grokked the theory, but what I could never really wrap my head around was how you would decompose a larger system into actors, especially when actors are single threaded. For example, I once attempted to create an actor for managing a Lucene index such that:</p>
+
+<ol>
+<li>Writing changes to an index requires an exclusive write lock  </li>
+<li>Searching an index requires a sharable read lock  </li>
+<li>You need mulitple actors to allow for concurrent searching</li>
+</ol>
+
+<p>These sorts of requirements would apply to many reader/writer systems or shared state, not just Lucene.  </p>
+
+<h3 id="becometheactoryouwanttobe">Become the actor you want to be</h3>
+
+<p>After doing the first Akka assignment, new ways of approaching the above problem are starting to dawn on me. I now realise that creating an actor to do a single job and then destroy itself is absolutely fine - you don't need to have a router pointing at some fixed set of pre-created actors. In the example above, it's no problem to spawn of as many actors as necessary for incoming search requests (so long as we have the "read" lock).</p>
+
+<p>I've also been smacked right in the face by how awesome <code>context.become</code> really is at simplifying code. After first reading about it, my initial thoughts went something along the line of...</p>
+
+<blockquote>
+  <p>Why would you ever want to do that? You'll lose unhandled messages! Dumb-asses!</p>
+</blockquote>
+
+<p>Whoa, that guy sounds like a douchebag who didn't understand the functionality. What I failed to grasp at the time was that <code>context.become</code> is how you can transition between states within your actor. This ends up making a lot of stuff much, much nicer, and certainly easier than implementing state machines as sets of different child actors under a supervisor. It also lets you carry state between your states through the method parameters.</p>
+
+<p>Given the above, one way of approaching the Lucene example may look something like...</p>
+
+<pre><code class=" scala">def receive = searching()
+
+def searching(): Receive = {  
+    case Search(...) =&gt;
+        val s = content actorOf(Props(classOf[...], ...))
+        ...
+
+    case i @ IndexDoc(...) =&gt;
+        context children foreach { contextwatch(_) }
+        context become drainSearches(Seq(i))
+}
+
+def drainSearches(pending: Seq[IndexDoc]): Receive = {  
+    case Terminated(s) =&gt;
+        if (context.children.isEmpty)
+            switchToIndexWriter()
+            indexDocument(pending.head)
+            context become indexing(pending.tail)
+        }
+
+    case i @ IndexDoc(...) =&gt;
+        context become drainSearches(pending + i)
+
+    case Search(...) =&gt;
+        stash()
+}
+
+def indexing(pending: Seq[IndexDoc]): Receive = {  
+    case i @ IndexDoc(...) =&gt;
+        context become indexing(pending + i)
+
+    case IndexComplete =&gt;
+        if (pending.isEmpty) {
+            unstashAll()
+            switchToIndexSearcher()
+            context become searching()
+        } else {
+          indexDocument(pending.head)
+          context become indexing(pending.tail)
+        }
+
+    case Search(...) =&gt;
+        stash()
+}
+</code></pre>
+
+<p>Now I'm not even sure that the above is the best approach, but it's a whole lot nicer than the unsuccessful concoctions I was coming up with in the past.</p>
+
+<p>And before you spam me, I know there's still issues in the above code that would need to be solved, for example, preventing a stream of writes from pending searches forever - maybe implementing an upper bound on the number of writes or amount of time allowed in the <code>index</code> state before it must yield control back to searches - but the general approach is more what I'm trying to document here. It would be interesting to know if it could be refactored into a reusable pattern, but I don't really know enough about Scala to make that happen (yet).</p>
+
+<p>Also, if you don't need to embed a search engine within your same process, then just use <a href='http://www.elasticsearch.org/' >ElasticSearch</a>. Life is way too short to write another wrapper around Lucene when other people have the problem well sorted - I know this from experience. </p>
+
+<h3 id="omfgshootmenow">OMFG - Shoot me now</h3>
+
+<p>So the bad side of Akka turns out to be debugging, which can be very tedious. In the case of the assignment, I was stuck on a bug that only manifested when:</p>
+
+<ol>
+<li>The tree garbage collection algorithm was enabled  </li>
+<li>There were more than 500 nodes in the tree</li>
+</ol>
+
+<p>It was point 2 that made it the most difficult, as the only debugging options I know of are to bump up the logging to show all of the messages being sent. Trying to follow 500+ messages myself by reading them one by one and correlating to an ID number was not my cup of tea. It is close to one of the most difficult bugs to find the root cause of in my career. I started doubting my own code, including the parts that had successfully passed all my other tests. I even started to doubt the Scala implementation of immutible Queue.foreach() iterating items in order.</p>
+
+<p>The problem ended up being that I would <code>become</code> the garbage collection state and add further received, <strong>order-sensitive</strong> operations to a pending queue (as specified by the assignment). When GC finished, I was replaying the pending messages to <code>self</code> and <code>become</code> the normal state again. Now this seems like it should be fine - you've got a whole bunch of pending stuff so send it back to yourself now that you're ready to receive it; however, a few hundred messages would be received and added to the mailbox during the time that the pending queue was being resent to <code>self</code>, meaning that the earlier pending operations, were now after the later currently incoming operations, screwing up the order of execution of these operations as a whole. This was invisible to myself though until I added extra logging to review the operation IDs being pended, unpended and executed and saw the ordering was out of whack. </p>
+
+<p>Bugger.</p>
+
+<p>So in the end it was a very simple bug (send the ops to the child actor that was executing them anyway, rather than to <code>self</code>) and I fully understand what was going on, but reaching that point was very tedious and mostly invisible. I doubt that similar situations like this wouldn't come up often, especially when working in a team or doing lots of refactoring. That said, I'm not sure how I would fix it either - maybe it's simply something that developers fluent in Akka comprehend the message flows and queues better and stop it sooner.</p>
+
+<h3 id="whoops">Whoops...</h3>
+
+<p>So I only meant to create a draft post and put a few bullet points in to fill out later. An hour later an I've accidentallied a whole post.</p>]]></description><link>http://my-ghost-blog.com/lets-get-reactive/</link><guid isPermaLink="false">e5721b27-b10d-47da-ab96-b86c73899885</guid><dc:creator><![CDATA[Nick Read]]></dc:creator><pubDate>Fri, 20 Dec 2013 01:00:00 GMT</pubDate></item><item><title><![CDATA[First Post]]></title><description><![CDATA[<p>I'm not sure what I'm going to write here, but I've always had the thought that "I should start a blog". I find writing being a very soothing way of releasing my mind of ideas and internal arguments. Writing things out allows me to more easily refactor ideas, throwing out pieces that are suddenly rendered useless, and discover new concepts that I wasn't aware of. Writing is something I always should have been doing more of... like reading novels... and excerising... and getting to bed early... and a thousand other things I could do to improve my life.</p>
+
+<p>What tipped me over the edge thought was to simply try out this <a href='http://ghost.org/' >Ghost Blogging Platform</a> that everyone is raving about. After determining it didn't really give me enough customisation yet, and because I would prefer to version control my writing with Git, I'm now trying out <a href='http://octopress.org/' >Octopress</a>.  It's probably more important that I continue on though regardless of the blogging software.</p>
+
+<h3 id="whatamigoingtowriteabout">What am I going to write about?</h3>
+
+<p>To make it clear, this question is not equivalent to "What will people want to read?". Satisfying others is not why I'm writing, and that should be evident to anyone who didn't skim over the previous section. What I will write about is whatever interest me, but I predict it will mostly be about computers and programming. Topics that interest me right now that I might write about include:</p>
+
+<ul>
+<li><a href='http://www.scala-lang.org/' >Scala programming language</a></li>
+<li><a href='http://en.wikipedia.org/wiki/Functional_programming' >Functional programming</a></li>
+<li><a href='http://www.raspberrypi.org/' >Raspberry Pi</a></li>
+<li><a href='http://www.android.com/' >Android</a></li>
+</ul>
+
+<p>I have no doubt that I will cover other topics, and the above list will be subject to change over time. Don't expect some amazing discoveries or unique content on any of the above things to be exclusively published here, but do expect that I'll be writing about things I'm doing in these areas.</p>
+
+<h3 id="somebackground">Some background</h3>
+
+<p>I live in <a href='http://en.wikipedia.org/wiki/Tasmania' >Tasmania, Australia</a> - it's a nice place, and well worth visting if you like amazing food, untouched natural beauty, and/or me.</p>
+
+<p><img src='http://upload.wikimedia.org/wikipedia/commons/0/0f/Hobart_from_Mount_Wellington_Panorama_1.jpg'  alt="Hobart from Mt Wellington" title="" />I am (currently) a Software Architect for <a href='http://en.wikipedia.org/wiki/Pearson_PLC' >Pearson</a> working on an education content repository product called <a href='http://www.equella.com/' >Equella</a></p>
+
+<p><img src='http://upload.wikimedia.org/wikipedia/commons/d/d2/Pearson_Without_Strapline_Blue_RGB_HiRes.png'  alt="Pearson" /></p>
+
+<h4 id="contactingme">Contacting me</h4>
+
+<ul>
+<li>Twitter - <a href='https://twitter.com/nick_read' >@nick_read</a></li>
+<li>Google Plus - <a href='http://google.com/+NickRead' >+NickRead</a></li>
+<li>Death threats, debts and tedious conversations - <a href='http://en.wikipedia.org/wiki//dev/null' >/dev/null</a></li>
+</ul>
+
+<p>I am married with two chilren and a border collie, all of whom tolerate me most of the time.</p>]]></description><link>http://my-ghost-blog.com/first-post/</link><guid isPermaLink="false">7d78e3b6-bade-4d1c-9fda-1edeb526191d</guid><dc:creator><![CDATA[Nick Read]]></dc:creator><pubDate>Thu, 19 Dec 2013 01:00:00 GMT</pubDate></item></channel></rss>
