@@ -23,7 +23,7 @@
 <link rel="alternate" type="application/rss+xml" title="For the love of blog" href="../rss/index.html">
 <link rel="canonical" href="http://nickread.github.io/single-page-applications-and-angularjs/" />
 </head>
-<body class="post-template">
+<body class="post-template tag-photos">
 
     <div id="wrapper">
         
@@ -33,7 +33,7 @@
 
 <main class="content" role="main">
 
-    <article class="post">
+    <article class="post tag-photos">
 
         <header class="site-head">
             <div class="site-head-content">
@@ -52,7 +52,9 @@
             </div>
 
             <section class="post-content">
-                <p>SPAs have come a long way over the last decade (I'm looking at you Outlook Web Access), and are almost unavoidable these days with many major websites being implemented as one. I always assumed writing a large SPA would be impossible due to complexity, cross-browser issues and the inability to easily do unit testing. Without actually attempting to do so, I presumed that the requried effort for writing everything client-side would be, say, twice as great as writing an AJAX heavy server-client application. Thankfully that assumption is turning out to be quite wrong, in fact, I'm slowly becoming of the opinion that SPAs are actually easier, for a couple of reasons:</p>
+                <p><img src="../content/images/2014/Apr/IMG_20131209_122948.jpg" alt="main-image" /></p>
+
+<p>SPAs have come a long way over the last decade (I'm looking at you Outlook Web Access), and are almost unavoidable these days with many major websites being implemented as one. I always assumed writing a large SPA would be impossible due to complexity, cross-browser issues and the inability to easily do unit testing. Without actually attempting to do so, I presumed that the requried effort for writing everything client-side would be, say, twice as great as writing an AJAX heavy server-client application. Thankfully that assumption is turning out to be quite wrong, in fact, I'm slowly becoming of the opinion that SPAs are actually easier, for a couple of reasons:</p>
 
 <ol>
 <li><p>A big part of writing large, Ajax heavy web applications is ensuring all the necessary state is transferred back and forth to the server. Forget to post back one of the form elements and the server response is going to be incorrect. The product I work on also had a lot of contextal modification which exacerbates this issue; for example, a search page that worked as expected, except when used in another context at which point several other hidden fields had to be submitted for all AJAX calls to, which in turn could impact the search results being returned. In this case, you don't know what you needs to be submitted, so you just have to submit everything.  Thankfully we wrote a framework for generating the correct Javascript and for performing all AJAX calls, but it's still a big effort. This sort of problem can still exist in a SPA, but the context handling is done along on the browser side which should make things easier.</p></li>
