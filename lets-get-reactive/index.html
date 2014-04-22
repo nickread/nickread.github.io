@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    
+    <title>Let's get reactive</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    
+    <link rel="stylesheet" type="text/css" href="../assets/css/screen.css?v=2434123393" />
+
+    
+    <meta name="generator" content="Ghost 0.4" />
+<link rel="alternate" type="application/rss+xml" title="For the love of blog" href="../rss/index.html">
+<link rel="canonical" href="http://my-ghost-blog.com/lets-get-reactive/" />
+</head>
+<body class="post-template">
+
+    <div id="wrapper">
+        
+        
+
+
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="site-head">
+            <div class="site-head-content">
+                <div class="vertical">
+                    <a href=http://my-ghost-blog.com><h1 class="blog-title">For the love of blog</h1></a>
+                </div>
+            </div>
+        </header>
+
+        
+        
+
+            <div class="post-head">
+                <h1 class="post-title">Let's get reactive</h1>
+                <span class="post-meta"><time datetime="2013-12-20">December 20, 2013</time></span>
+            </div>
+
+            <section class="post-content">
+                <p>I've been taking the <a href="https://class.coursera.org/reactive-001/class/index">Principles of Reactive Programming</a> course on Coursera recently. The course is delivered by three different lecturers covering different and/or complementing ways of building reactive programs. While I haven't quite finished the course yet, and the last assignment is crazy big (the brief pretty much says "build the equivalent of a clustered Riak with data persistence"... <em>gulp</em>), I have been enjoying it. It's good to be writing Scala again given that my day job is a huge Java application.</p>
+
+<h3 id="rx">Rx</h3>
+
+<p>The introduction to <a href="http://rxscala.github.io/">Rx</a> was quite interesting, and after completing the assignments I can definitely see how it can help tame streams of events. I don't think it is something you would want to apply everywhere, but it certainly has its targets:</p>
+
+<ul>
+<li>Native application where you're receiving click events - this is also what the last assignment was built around and I think is a very natural fit.</li>
+<li>Web services that talk over WebSocket could be interesting too as it lets you work with the incoming "steam of things"; however, web containers are already providing mechanisms for working with this, so maybe it's less useful here than it could be.  </li>
+<li>Possibly integrating with Akka actors to convert incoming messages into a stream - I'm not sure how applicable this would really be though since you want Akka to be in charge of ensuring actors and their state are not being used concurrently, and having Rx step in an execute callbacks at the wrong time could be bad.</li>
+</ul>
+
+<p>I guess I'll need to investigate further before making a call on how applicable Rx is in real world scenarios.</p>
+
+<h3 id="akka">Akka</h3>
+
+<p>The topic I was more excited to delve into  was <a href="http://akka.io/">Akka</a>. I've looked into it a couple of times before and grokked the theory, but what I could never really wrap my head around was how you would decompose a larger system into actors, especially when actors are single threaded. For example, I once attempted to create an actor for managing a Lucene index such that:</p>
+
+<ol>
+<li>Writing changes to an index requires an exclusive write lock  </li>
+<li>Searching an index requires a sharable read lock  </li>
+<li>You need mulitple actors to allow for concurrent searching</li>
+</ol>
+
+<p>These sorts of requirements would apply to many reader/writer systems or shared state, not just Lucene.  </p>
+
+<h3 id="becometheactoryouwanttobe">Become the actor you want to be</h3>
+
+<p>After doing the first Akka assignment, new ways of approaching the above problem are starting to dawn on me. I now realise that creating an actor to do a single job and then destroy itself is absolutely fine - you don't need to have a router pointing at some fixed set of pre-created actors. In the example above, it's no problem to spawn of as many actors as necessary for incoming search requests (so long as we have the "read" lock).</p>
+
+<p>I've also been smacked right in the face by how awesome <code>context.become</code> really is at simplifying code. After first reading about it, my initial thoughts went something along the line of...</p>
+
+<blockquote>
+  <p>Why would you ever want to do that? You'll lose unhandled messages! Dumb-asses!</p>
+</blockquote>
+
+<p>Whoa, that guy sounds like a douchebag who didn't understand the functionality. What I failed to grasp at the time was that <code>context.become</code> is how you can transition between states within your actor. This ends up making a lot of stuff much, much nicer, and certainly easier than implementing state machines as sets of different child actors under a supervisor. It also lets you carry state between your states through the method parameters.</p>
+
+<p>Given the above, one way of approaching the Lucene example may look something like...</p>
+
+<pre><code class=" scala">def receive = searching()
+
+def searching(): Receive = {  
+    case Search(...) =&gt;
+        val s = content actorOf(Props(classOf[...], ...))
+        ...
+
+    case i @ IndexDoc(...) =&gt;
+        context children foreach { contextwatch(_) }
+        context become drainSearches(Seq(i))
+}
+
+def drainSearches(pending: Seq[IndexDoc]): Receive = {  
+    case Terminated(s) =&gt;
+        if (context.children.isEmpty)
+            switchToIndexWriter()
+            indexDocument(pending.head)
+            context become indexing(pending.tail)
+        }
+
+    case i @ IndexDoc(...) =&gt;
+        context become drainSearches(pending + i)
+
+    case Search(...) =&gt;
+        stash()
+}
+
+def indexing(pending: Seq[IndexDoc]): Receive = {  
+    case i @ IndexDoc(...) =&gt;
+        context become indexing(pending + i)
+
+    case IndexComplete =&gt;
+        if (pending.isEmpty) {
+            unstashAll()
+            switchToIndexSearcher()
+            context become searching()
+        } else {
+          indexDocument(pending.head)
+          context become indexing(pending.tail)
+        }
+
+    case Search(...) =&gt;
+        stash()
+}
+</code></pre>
+
+<p>Now I'm not even sure that the above is the best approach, but it's a whole lot nicer than the unsuccessful concoctions I was coming up with in the past.</p>
+
+<p>And before you spam me, I know there's still issues in the above code that would need to be solved, for example, preventing a stream of writes from pending searches forever - maybe implementing an upper bound on the number of writes or amount of time allowed in the <code>index</code> state before it must yield control back to searches - but the general approach is more what I'm trying to document here. It would be interesting to know if it could be refactored into a reusable pattern, but I don't really know enough about Scala to make that happen (yet).</p>
+
+<p>Also, if you don't need to embed a search engine within your same process, then just use <a href="http://www.elasticsearch.org/">ElasticSearch</a>. Life is way too short to write another wrapper around Lucene when other people have the problem well sorted - I know this from experience. </p>
+
+<h3 id="omfgshootmenow">OMFG - Shoot me now</h3>
+
+<p>So the bad side of Akka turns out to be debugging, which can be very tedious. In the case of the assignment, I was stuck on a bug that only manifested when:</p>
+
+<ol>
+<li>The tree garbage collection algorithm was enabled  </li>
+<li>There were more than 500 nodes in the tree</li>
+</ol>
+
+<p>It was point 2 that made it the most difficult, as the only debugging options I know of are to bump up the logging to show all of the messages being sent. Trying to follow 500+ messages myself by reading them one by one and correlating to an ID number was not my cup of tea. It is close to one of the most difficult bugs to find the root cause of in my career. I started doubting my own code, including the parts that had successfully passed all my other tests. I even started to doubt the Scala implementation of immutible Queue.foreach() iterating items in order.</p>
+
+<p>The problem ended up being that I would <code>become</code> the garbage collection state and add further received, <strong>order-sensitive</strong> operations to a pending queue (as specified by the assignment). When GC finished, I was replaying the pending messages to <code>self</code> and <code>become</code> the normal state again. Now this seems like it should be fine - you've got a whole bunch of pending stuff so send it back to yourself now that you're ready to receive it; however, a few hundred messages would be received and added to the mailbox during the time that the pending queue was being resent to <code>self</code>, meaning that the earlier pending operations, were now after the later currently incoming operations, screwing up the order of execution of these operations as a whole. This was invisible to myself though until I added extra logging to review the operation IDs being pended, unpended and executed and saw the ordering was out of whack. </p>
+
+<p>Bugger.</p>
+
+<p>So in the end it was a very simple bug (send the ops to the child actor that was executing them anyway, rather than to <code>self</code>) and I fully understand what was going on, but reaching that point was very tedious and mostly invisible. I doubt that similar situations like this wouldn't come up often, especially when working in a team or doing lots of refactoring. That said, I'm not sure how I would fix it either - maybe it's simply something that developers fluent in Akka comprehend the message flows and queues better and stop it sooner.</p>
+
+<h3 id="whoops">Whoops...</h3>
+
+<p>So I only meant to create a draft post and put a few bullet points in to fill out later. An hour later an I've accidentallied a whole post.</p>
+                <section class="author">
+                    <p>--</p>
+                    <p>Nick Read</p>
+                </section>
+
+            </section>
+
+            <footer class="post-footer">
+
+                <section class="share">
+                    <h4>Share this</h4>
+                    <a class="icon-twitter" href="http://twitter.com/share?text=Let's%20get%20reactive&url=http://my-ghost-blog.com/lets-get-reactive/"
+                        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                        <span class="hidden">Twitter</span>
+                    </a>
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://my-ghost-blog.com/lets-get-reactive/"
+                        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                        <span class="hidden">Facebook</span>
+                    </a>
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://my-ghost-blog.com/lets-get-reactive/"
+                       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                        <span class="hidden">Google+</span>
+                    </a>
+                </section>
+
+            </footer>
+
+        
+
+    </article>
+
+    <script type="text/javascript" src="../assets/js/post.js?v=2434123393"></script>
+
+</main>
+
+    </div>
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="http://my-ghost-blog.com/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="http://my-ghost-blog.com/">For the love of blog</a> &copy; 2014 &bull; All rights reserved.</section>
+             <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://ghost.org">Ghost</a></section>
+        </div>
+    </footer>
+
+    
+    <script src="../public/jquery.js?v=2434123393"></script>
+
+    
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=2434123393"></script>
+
+</body>
+</html>
