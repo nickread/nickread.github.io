@@ -23,7 +23,7 @@
 <link rel="alternate" type="application/rss+xml" title="For the love of blog" href="../rss/index.html">
 <link rel="canonical" href="http://my-ghost-blog.com/and-back-to-ghost/" />
 </head>
-<body class="post-template">
+<body class="post-template tag-photos">
 
     <div id="wrapper">
         
@@ -33,7 +33,7 @@
 
 <main class="content" role="main">
 
-    <article class="post">
+    <article class="post tag-photos">
 
         <header class="site-head">
             <div class="site-head-content">
@@ -52,7 +52,9 @@
             </div>
 
             <section class="post-content">
-                <p>Back in my first post I noted that I started this blog as part of trying out the <a href="https://ghost.org/">Ghost Blogging Platform</a>, but almost immediately switched to Octopress as I preferred to have the blog be static and stored in a Git repo, and Ghost wasn't really customisable at the time.</p>
+                <p><img src="../content/images/2014/Apr/image.jpg" alt="main-image" /></p>
+
+<p>Back in my first post I noted that I started this blog as part of trying out the <a href="https://ghost.org/">Ghost Blogging Platform</a>, but almost immediately switched to Octopress as I preferred to have the blog be static and stored in a Git repo, and Ghost wasn't really customisable at the time.</p>
 
 <p>A few months have passed and things have changed. Ghost now support themes to allow for wider content, and there's a small project called <a href="https://github.com/axitkhurana/buster">Buster</a> which uses Wget to make a static snapshot of your Ghost blog and push it to Github.  Now while the SQLite DB is not pushed to Github, and it doesn't do revision control, it means I do get a nice, local Ghost installation for writing in (thanks to <a href="https://github.com/dockerfile/ghost">Docker</a>) which is much more pleasant than the cycle of write markdown, generate preview, notice errors, write more markdown, ad infinum. The Ghost DB and picture are kept in a folder outside of the Docker container that is backed up via Dropbox.</p>
 
