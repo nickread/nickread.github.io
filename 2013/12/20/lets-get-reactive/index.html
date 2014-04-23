@@ -1,60 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     
     <title>Let's get reactive</title>
-    <meta name="description" content="" />
 
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="MobileOptimized" content="320" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="shortcut icon" href="../../../../favicon.ico">
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Let's get reactive">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Let's get reactive">
+    <meta property="og:description" content="">
+
+    <link href="../../../../favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="http://localhost/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
 
     
-    <link rel="stylesheet" type="text/css" href="../../../../assets/css/screen.css?v=7c1e56cf67" />
+    <link rel="stylesheet" type="text/css" href="../../../../assets/css/uno.css?v=1477219859" />
 
     
     <meta name="generator" content="Ghost 0.4" />
 <link rel="alternate" type="application/rss+xml" title="Write Once; Maintain Everywhere " href="../../../../rss/index.html">
 <link rel="canonical" href="http://nickread.github.io/2013/12/20/lets-get-reactive/" />
+
 </head>
-<body class="post-template tag-photos">
+<body class="post-template tag-akka tag-scala tag-rx no-js">
 
-    <div id="wrapper">
-        
-        
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
 
+    <header class="panel-cover panel-cover--collapsed" >
+  <div class="panel-main">
 
-
-<main class="content" role="main">
-
-    <article class="post tag-photos">
-
-        <header class="site-head">
-            <div class="site-head-content">
-                <div class="vertical">
-                    <a href=http://nickread.github.io><h1 class="blog-title">Write Once; Maintain Everywhere </h1></a>
-                </div>
-            </div>
-        </header>
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
 
         
+        <a href="http://nickread.github.io" title="link to homepage for Write Once; Maintain Everywhere "><img src="../../../../content/images/2014/Apr/1a3c2a7.jpg" width="80" alt="Write Once; Maintain Everywhere  logo" class="panel-cover__logo logo" /></a>
         
+        <h1 class="panel-cover__title panel-title"><a href="http://nickread.github.io" title="link to homepage for Write Once; Maintain Everywhere ">Write Once; Maintain Everywhere </a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">I&#x27;m going to try and write stuff here occasionally. Probably about programming. Sometimes it may even be intelligible...</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
 
-            <div class="post-head">
-                <h1 class="post-title">Let's get reactive</h1>
-                <span class="post-meta"><time datetime="2013-12-20">December 20, 2013</time></span>
-            </div>
+        <div class="navigation-wrapper">
 
-            <section class="post-content">
-                <p><img src="../../../../content/images/2014/Apr/image--1-.jpg" alt="main-image" /></p>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="../../../../index.html#blog" title="link to Write Once; Maintain Everywhere  blog" class="blog-button">Blog</a></li>
+            </ul>
+          </nav>
 
-<p>I've been taking the <a href="https://class.coursera.org/reactive-001/class/index">Principles of Reactive Programming</a> course on Coursera recently. The course is delivered by three different lecturers covering different and/or complementing ways of building reactive programs. While I haven't quite finished the course yet, and the last assignment is crazy big (the brief pretty much says "build the equivalent of a clustered Riak with data persistence"... <em>gulp</em>), I have been enjoying it. It's good to be writing Scala again given that my day job is a huge Java application.</p>
+          
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+
+  <!-- Twitter -->
+  <li class="navigation__item">
+    <a href="http://twitter.com/nick_read" title="@nick_read on Twitter">
+      <i class='icon icon-social-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+
+    <!-- Google Plus -->
+    <li class="navigation__item">
+      <a href="http://google.com/+NickRead" title="+NickRead on Google Plus">
+        <i class='icon icon-social-google-plus'></i>
+        <span class="label">G+</span>
+      </a>
+    </li>
+
+    <!-- GitHub -->
+    <li class="navigation__item">
+      <a href="https://github.com/nickread/" title="nickread on GitHub">
+        <i class='icon icon-social-github'></i
+>        <span class="label">GitHub</span>
+      </a>
+    </li>
+
+    <!-- LinkedIn -->
+    <li class="navigation__item">
+      <a href="http://au.linkedin.com/in/nicholasread" title="Nicholas Read on LinkedIn">
+        <i class='icon icon-social-linkedin'></i
+>        <span class="label">LinkedIn</span>
+      </a>
+    </li>
+
+    </ul>
+</nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            
+
+
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="20 Dec 2013" class="post-meta__date date">20 Dec 2013</time> &#8226; <span class="post-meta__tags tags">on <a href="../../../../tag/akka/index.html">akka</a>, <a href="../../../../tag/scala/index.html">scala</a>, <a href="../../../../tag/rx/index.html">rx</a></span>
+        <!--<span class="post-meta__author author"><img src="//www.gravatar.com/avatar/2342db5e772efae08f5a6fa04f092a92?d=404" alt="profile image for Nick Read" class="avatar post-meta__avatar" /> by Nick Read</span>-->
+      </div>
+      <h1 class="post-title">Let's get reactive</h1>
+    </header>
+
+    <section class="post tag-akka tag-scala tag-rx">
+      <p>I've been taking the <a href="https://class.coursera.org/reactive-001/class/index">Principles of Reactive Programming</a> course on Coursera recently. The course is delivered by three different lecturers covering different and/or complementing ways of building reactive programs. While I haven't quite finished the course yet, and the last assignment is crazy big (the brief pretty much says "build the equivalent of a clustered Riak with data persistence"... <em>gulp</em>), I have been enjoying it. It's good to be writing Scala again given that my day job is a huge Java application.</p>
+
+<hr />
 
 <h3 id="rx">Rx</h3>
 
@@ -67,6 +148,8 @@
 </ul>
 
 <p>I guess I'll need to investigate further before making a call on how applicable Rx is in real world scenarios.</p>
+
+<hr />
 
 <h3 id="akka">Akka</h3>
 
@@ -163,59 +246,36 @@ def indexing(pending: Seq[IndexDoc]): Receive = {
 
 <p>So in the end it was a very simple bug (send the ops to the child actor that was executing them anyway, rather than to <code>self</code>) and I fully understand what was going on, but reaching that point was very tedious and mostly invisible. I doubt that similar situations like this wouldn't come up often, especially when working in a team or doing lots of refactoring. That said, I'm not sure how I would fix it either - maybe it's simply something that developers fluent in Akka comprehend the message flows and queues better and stop it sooner.</p>
 
+<hr />
+
 <h3 id="whoops">Whoops...</h3>
 
 <p>So I only meant to create a draft post and put a few bullet points in to fill out later. An hour later an I've accidentallied a whole post.</p>
-                <section class="author">
-                    <p>--</p>
-                    <p>Nick Read</p>
-                </section>
 
-            </section>
+<p><img src="../../../../content/images/2014/Apr/image--1-.jpg" alt="" /></p>
+    </section>
 
-            <footer class="post-footer">
+  </article>
 
-                <section class="share">
-                    <h4>Share this</h4>
-                    <a class="icon-twitter" href="http://twitter.com/share?text=Let's%20get%20reactive&url=http://nickread.github.io/2013/12/20/lets-get-reactive/"
-                        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-                        <span class="hidden">Twitter</span>
-                    </a>
-                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://nickread.github.io/2013/12/20/lets-get-reactive/"
-                        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-                        <span class="hidden">Facebook</span>
-                    </a>
-                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://nickread.github.io/2013/12/20/lets-get-reactive/"
-                       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-                        <span class="hidden">Google+</span>
-                    </a>
-                </section>
+  
 
-            </footer>
 
-        
 
-    </article>
 
-    <script type="text/javascript" src="../../../../assets/js/post.js?v=7c1e56cf67"></script>
-
-</main>
-
+            <footer class="footer">
+    <span class="footer__copyright"><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a></span>
+    <span class="footer__copyright">All posts are licensed under the <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> unless noted.</span>
+    <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+    <span class="footer__copyright">Proudly published with <a href="http://ghost.org" title="link to Ghost website">Ghost</a></span>
+</footer>
+        </div>
     </div>
 
-    <footer class="site-footer">
-        <a class="subscribe icon-feed" href="http://nickread.github.io/rss/"><span class="tooltip">Subscribe!</span></a>
-        <div class="inner">
-             <section class="copyright">All content copyright <a href="http://nickread.github.io/">Write Once; Maintain Everywhere </a> &copy; 2014 &bull; All rights reserved.</section>
-             <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://ghost.org">Ghost</a></section>
-        </div>
-    </footer>
+    
+    <script src="../../../../public/jquery.js?v=1477219859"></script>
 
     
-    <script src="../../../../public/jquery.js?v=7c1e56cf67"></script>
-
-    
-    <script type="text/javascript" src="../../../../assets/js/jquery.fitvids.js?v=7c1e56cf67"></script>
+    <script type="text/javascript" src="../../../../assets/js/main.js?v=1477219859"></script>
 
 </body>
 </html>
